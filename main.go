@@ -11,9 +11,9 @@ import (
     "gopkg.in/urfave/cli.v1"
 
     /* Local packages */
-    "github.com/keeferrourke/htn17/files"
-    "github.com/keeferrourke/htn17/srv"
-    "github.com/keeferrourke/htn17/storage"
+    "github.com/keeferrourke/imgrep/files"
+    "github.com/keeferrourke/imgrep/srv"
+    "github.com/keeferrourke/imgrep/storage"
 )
 
 /* cli commands */

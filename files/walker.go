@@ -14,8 +14,8 @@ import (
     "gopkg.in/urfave/cli.v1"
 
     /* Local packages */
-    "github.com/keeferrourke/htn17/ocr"
-    "github.com/keeferrourke/htn17/storage"
+    "github.com/keeferrourke/imgrep/ocr"
+    "github.com/keeferrourke/imgrep/storage"
 )
 
 var (
