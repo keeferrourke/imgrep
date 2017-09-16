@@ -12,7 +12,6 @@ import (
 
     /* Local packages */
     "github.com/keeferrourke/imgrep/files"
-    "github.com/keeferrourke/imgrep/srv"
     "github.com/keeferrourke/imgrep/storage"
 )
 
@@ -23,22 +22,6 @@ var Search = cli.Command {
     Aliases: []string{"s", "find"},
     Usage: "search image database for keywords",
     Action: files.Grep,
-}
-
-// server start
-var Start = cli.Command {
-    Name: "start",
-    Aliases: []string{"run"},
-    Usage: "start the imgrep server",
-    Action: srv.StartServer,
-    Flags: []cli.Flag {
-        cli.StringFlag {
-            Name: "port, p",
-            Value: "1337",
-            Usage: "set `PORT` for the server at run-time",
-            Destination: &srv.PORT,
-        },
-    },
 }
 
 // update/initialize sql db
@@ -94,7 +77,6 @@ func main() {
     app.Version = "v0"
     app.Commands = []cli.Command{
         Search,
-        Start,
         UpdateDB,
     }
     app.CommandNotFound = func(c *cli.Context, command string) {
