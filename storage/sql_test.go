@@ -74,5 +74,50 @@ func TestInsert(t *testing.T) {
 	if keywords != fmt.Sprintf("%s,%s", keyword1, keyword2) {
 		t.Errorf("Incorrect keyword: %v", keywords)
 	}
+}
+
+func TestUpdate(t *testing.T) {
+	stmt, err := db.Prepare("insert into images (filename, keywords) values (?, ?)")
+	if err != nil {
+		t.Fatalf("error: %v", err)
+	}
+
+	filename := "foo3.jpeg"
+	keywords := "yolo"
+
+	_, err = stmt.Exec(filename, keywords)
+	if err != nil {
+		t.Fatalf("error: %v", err)
+	}
+
+	err = Update(filename, "yolo2")
+	if err != nil {
+		t.Fatalf("error: %v", err)
+	}
+
+	rows, err := db.Query(`select * from images where filename=?`, filename)
+	if err != nil {
+		t.Fatalf("error: %v", err)
+	}
+
+	defer rows.Close()
+
+	var fname string
+	var kws string
+
+	for rows.Next() {
+		err := rows.Scan(&fname, &kws)
+		if err != nil {
+			t.Fatalf("error: %v", err)
+		}
+	}
+
+	if fname != filename {
+		t.Errorf("Incorrect filename: %v", fname)
+	}
+
+	if kws != "yolo2" {
+		t.Errorf("Incorrect keyword: %v", kws)
+	}
 
 }

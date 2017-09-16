@@ -66,3 +66,14 @@ func Get(keyword string) ([]string, error) {
 	}
 	return results, nil
 }
+
+func Update(filename string, keywords ...string) error {
+	keywordsAppended := strings.Join(keywords, ",")
+	stmt, err := db.Prepare("update images set keywords=? where filename=?")
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Exec(keywordsAppended, filename)
+	return err
+}
