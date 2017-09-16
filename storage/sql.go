@@ -19,7 +19,7 @@ func InitDB(path string) {
 	}
 
 	sqlStmt := `
-    create table images (
+    create table if not exists images (
         filename text not null primary key,
         keywords text
     );
