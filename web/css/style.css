@@ -1,3 +1,7 @@
+header {
+  margin-top:-80px;
+}
+
 body {
   margin:0!important;
 }
@@ -46,7 +50,7 @@ h1 {
   margin:0;
   font-family:"Kursk 105 Medium", Verdana, serif;
   line-height:60px;
-  color:#B51117;
+  color:black;
 }
 
 .rLeft {
@@ -135,14 +139,6 @@ p {
 
 h4 {
   font-size:60px;
-}
-
-ul {
-  margin-left:120px;
-}
-
-li {
-  font-size:50px;
 }
 
 .imageContainer {
