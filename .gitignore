@@ -23,3 +23,5 @@ imgrep
 .glide/
 
 storage/imgrep-test.db
+
+files/dat1
