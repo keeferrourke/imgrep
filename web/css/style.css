@@ -1,0 +1,170 @@
+body {
+  margin:0!important;
+}
+
+.head {
+  position:fixed;
+  top:0;
+  width:100%;
+  background:white;
+  border-bottom:10px;
+  border: 10px solid #0000A0;
+  display:block;
+}
+
+.head img {
+  display:inline-block;
+  width:50%;
+}
+
+.searchBox {
+  display:inline-block;
+  width:50%;
+  vertical-align:top;
+}
+
+.results {
+  display:block;
+  width:49%;
+}
+
+h1 {
+  font-family:Helvetica, Verdana, Georgia, serif;
+  font-size:120px!important;
+  text-align:center;
+  background-color:#ADD8E6;
+  border: 10px solid #0000A0;
+  border-radius: 25px;
+  padding-top: 15px;
+}
+
+.headerText {
+  display:inline;
+  width:50%;
+  text-align:left;
+  font-size:70px;
+  margin:0;
+  font-family:"Kursk 105 Medium", Verdana, serif;
+  line-height:60px;
+  color:#B51117;
+}
+
+.rLeft {
+  float:left;
+  margin-top:-80px;
+}
+
+.rRight {
+  float:right;
+  margin-top:-150px;
+  margin-bottom:-78px;
+}
+
+@media (max-width: 1279px) {
+  h1 {
+    font-size: 100px!important;
+    padding-top: 10px;
+  }
+  .headerText {
+    font-size: 60px;
+    line-height:50px;
+  }
+  .rLeft {
+    margin-top:-65px;
+  }
+  .rRight {
+    margin-top:-130px;
+  }
+}
+
+@media (max-width: 991px) {
+  h1 {
+    font-size: 80px!important;
+    padding-top: 6px;
+  }
+  .headerText {
+    font-size: 50px;
+    line-height:40px;
+  }
+  .rLeft {
+    margin-top:-50px;
+  }
+  .rRight {
+    margin-top:-110px;
+  }
+}
+
+@media (max-width: 767px) {
+  h1 {
+    font-size: 60px!important;
+    padding-top: 3px;
+  }
+  .headerText {
+    font-size: 40px;
+    line-height:30px;
+  }
+  .rLeft {
+    margin-top:-35px;
+  }
+  .rRight {
+    margin-top:-90px;
+  }
+}
+
+@media (max-width: 545px) {
+  h1 {
+    font-size:40px!important;
+    padding-top: 0px;
+  }
+  .headerText {
+    font-size:30px;
+    line-height:25px;
+  }
+  .rLeft {
+    margin-top:-25px;
+  }
+  .rRight {
+    margin-top:-60px;
+  }
+}
+
+p {
+  font-family:Georgia, serif;
+  font-size:20px;
+}
+
+h4 {
+  font-size:60px;
+}
+
+ul {
+  margin-left:120px;
+}
+
+li {
+  font-size:50px;
+}
+
+.imageContainer {
+  height: 300px;
+  overflow: auto;
+  display:inline-block;
+  padding:10px 30px;
+  margin:10px;
+}
+
+.imageContainer img{
+  height: inherit;
+  display:block;
+}
+
+.imageContainer p{
+  display:block;
+  text-align:left;
+  width:inherit;
+  font-size:14px;
+}
+
+.imageContainer:hover p{
+  display:block;
+}

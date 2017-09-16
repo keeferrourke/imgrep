@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>File Recognition Tool</title>
+    <link rel = "stylesheet" type = "text/css" href = "css/style.css" />
+  </head>
+  <header>
+    <h1>File Recognition Tool</h1>
+  </header>
+  <body>
+    <div style="padding-bottom:100px">
+    <div class="results rLeft">
+      <div class="headerText">What would you like to search?</div>
+      <div class="searchBox">
+        <input id="browse" type="file" size="120" value="upload" webkitdirectory directory multiple/>
+        <input type="submit" value="Submit" onclick="search()"/>
+        <input type="text" id="keyword" placeholder="Search for a keyword!" size="85">
+      </div>
+    </div>
+    <div class="results rRight"><h1 id="num">0 Results</h1></div>
+    </div>
+    <div id="imageBigContainer" style="text-align:center">
+    <div class="imageContainer">
+      <img src="/Users/thomasdedinsky/Desktop/Screen Shot 2017-09-16 at 3.56.48 PM.png">
+      <p>/Users/thomasdedinsky/Desktop/Screen Shot 2017-09-16 at 3.56.48 PM.png</p>
+    </div>
+    <div class="imageContainer">
+      <img src="/Users/thomasdedinsky/Desktop/Screen Shot 2017-09-16 at 3.56.48 PM.png">
+      <p>/Users/thomasdedinsky/Desktop/Screen Shot 2017-09-16 at 3.56.48 PM.png</p>
+    </div>
+    <div class="imageContainer">
+      <img src="/Users/thomasdedinsky/Desktop/Screen Shot 2017-09-16 at 3.56.48 PM.png">
+      <p>/Users/thomasdedinsky/Desktop/Screen Shot 2017-09-16 at 3.56.48 PM.png</p>
+    </div>
+    <div class="imageContainer">
+      <img src="/Users/thomasdedinsky/Desktop/Screen Shot 2017-09-16 at 3.56.48 PM.png">
+      <p>/Users/thomasdedinsky/Desktop/Screen Shot 2017-09-16 at 3.56.48 PM.png</p>
+    </div>
+    <div>
+  </body>
+
+  <script>
+    // You can also require other files to run in this process
+    require('./renderer.js')
+  </script>
+  <script>
+    function search() {
+      var keyword, path;
+      keyword = document.getElementById('myInput');
+      path = document.getElementById('browse');
+      var html = '';
+      var num = 8;
+      for (var i = 0; i < num; i++) {
+        html += '<div class="imageContainer">';
+        html += '<img src="/Users/thomasdedinsky/Desktop/Screen Shot 2017-09-16 at 3.56.48 PM.png">';
+        html += '<p>/Users/thomasdedinsky/Desktop/Screen Shot 2017-09-16 at 3.56.48 PM.png</p>';
+        html += '</div>';
+      }
+      document.getElementById("num").innerHTML = num.toString() + ' Results';
+      document.getElementById("imageBigContainer").innerHTML = html;
+    }
+    </script>
+</html>
