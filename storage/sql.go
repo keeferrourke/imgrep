@@ -4,12 +4,15 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+    "os"
 	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
 var db *sql.DB
+
+const DBPATH string = "storage" + string(os.PathSeparator) + "imgrep.db"
 
 func InitDB(path string) {
 	var err error

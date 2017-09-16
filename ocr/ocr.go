@@ -3,6 +3,7 @@ package ocr
 import (
     /* Standard library packages */
     "fmt"
+    "strings"
 
     /* Third party */
     // imports as "cli", pinned to v1; cliv2 is going to be drastically
@@ -12,10 +13,11 @@ import (
     /* Local packages */
 )
 
-func Process(path string) string {
+func Process(path string) []string {
     client, _ := gosseract.NewClient()
     out, _ := client.Src(path).Out()
 
-    return fmt.Sprintf(out)
+    s := fmt.Sprintf(out)
+    return strings.Split(s, " ")
 }
 

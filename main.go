@@ -11,8 +11,9 @@ import (
     "gopkg.in/urfave/cli.v1"
 
     /* Local packages */
-    "github.com/keeferrourke/htn17/srv"
     "github.com/keeferrourke/htn17/files"
+    "github.com/keeferrourke/htn17/srv"
+    "github.com/keeferrourke/htn17/storage"
 )
 
 /* cli commands */
@@ -29,15 +30,31 @@ var Start = cli.Command {
             Usage: "set `PORT` for the server at run-time",
             Destination: &srv.PORT,
         },
+    },
+}
+
+var UpdateDB = cli.Command {
+    Name: "updatedb",
+    Aliases: []string{"init"},
+    Usage: "initialize the database of images",
+    Action: files.InitFromPath,
+    Flags: []cli.Flag {
         cli.StringFlag {
             Name: "dir, d",
             Value: files.WALKPATH,
             Usage: "specify the base filesystem subtree to scan",
             Destination: &files.WALKPATH,
         },
+        cli.BoolFlag {
+            Name: "verbose, v",
+            Usage: "enable verbose output",
+        },
     },
 }
 
+func init() {
+    storage.InitDB(storage.DBPATH)
+}
 
 /* run application */
 func main() {
@@ -68,6 +85,7 @@ func main() {
     app.Version = "v0"
     app.Commands = []cli.Command{
         Start,
+        UpdateDB,
     }
     app.CommandNotFound = func(c *cli.Context, command string) {
         fmt.Fprintf(c.App.Writer, "Did you read the manual?\n");
