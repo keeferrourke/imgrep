@@ -3,7 +3,7 @@ package files
 import (
     /* Standard library packages */
     "fmt"
-    "os"
+    "log"
 
     /* Third party */
     // imports as "cli", pinned to v1; cliv2 is going to be drastically
@@ -11,30 +11,19 @@ import (
     "gopkg.in/urfave/cli.v1"
 
     /* Local packages */
-    "github.com/keeferrourke/imgrep/ocr"
     "github.com/keeferrourke/imgrep/storage"
 )
 
-/* error handling */
-type errorString struct {
-    s string
-}
-
-func (e *errorString) Error() string {
-    return e.s
-}
-
-func New(err string) error {
-    return &errorString{err}
-}
-
 /* perform db query */
-func Grep(c *cli.Context) error {
+func Grep(c *cli.Context) {
     if len(c.Args()) < 1 {
-        err := errors.New("args: query required")
-        log.Fatal(err)
-        return err
+        log.Fatal("args: query required")
     }
 
-
+    for _, arg := range c.Args() {
+        res, _ := storage.Get(arg)
+        for i := 0; i < len(res); i++ {
+            fmt.Println(res[i])
+        }
+    }
 }
