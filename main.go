@@ -17,6 +17,14 @@ import (
 )
 
 /* cli commands */
+// search db
+var Search = cli.Command {
+    Name: "search",
+    Aliases: []string{"s", "find"},
+    Usage: "search image database for keywords",
+    Action: files.Grep,
+}
+
 // server start
 var Start = cli.Command {
     Name: "start",
@@ -33,6 +41,7 @@ var Start = cli.Command {
     },
 }
 
+// update/initialize sql db
 var UpdateDB = cli.Command {
     Name: "updatedb",
     Aliases: []string{"init"},
@@ -84,6 +93,7 @@ func main() {
     app.Usage = "grep image files for words"
     app.Version = "v0"
     app.Commands = []cli.Command{
+        Search,
         Start,
         UpdateDB,
     }
