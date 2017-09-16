@@ -1,3 +1,9 @@
+# binary name
+htn17
+
+# Vim
+*.sw[a-p]
+
 # Binaries for programs and plugins
 *.exe
 *.dll
