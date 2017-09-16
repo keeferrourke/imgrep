@@ -20,7 +20,7 @@ import (
 var Start = cli.Command {
     Name: "start",
     Aliases: []string{"run"},
-    Usage: "start the threat-detection server",
+    Usage: "start the imgrep server",
     Action: srv.StartServer,
     Flags: []cli.Flag {
         cli.StringFlag {
@@ -67,9 +67,9 @@ func main() {
     }
     app.Copyright = "(c) 2017 under the MIT License"
     app.EnableBashCompletion = true
-    app.Name = "gocymon"
-    app.Description = "Cross platform threat-detection daemon"
-    app.Usage = "run threat-detection server"
+    app.Name = "imgrep"
+    app.Description = "go-cli image grepper using tesseract"
+    app.Usage = "grep image files for words"
     app.Version = "v0"
     app.Commands = []cli.Command{
         Start,
