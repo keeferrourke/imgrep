@@ -39,11 +39,6 @@ var Start = cli.Command {
 }
 
 
-// bootstrap the application
-func init() {
-}
-
-
 /* run application */
 func main() {
     // customize cli

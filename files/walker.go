@@ -10,6 +10,7 @@ import (
     /* Third party */
 
     /* Local packages */
+    "github.com/keeferrourke/htn17/ocr"
 )
 
 var (
@@ -21,7 +22,7 @@ func init () {
     if err != nil {
         log.Fatal(err)
     }
-    WALKPATH = u.HomeDir + string(os.PathSeparator) + "Pictures"
+    WALKPATH = u.HomeDir + string(os.PathSeparator) + "Pictures/Screenshots"
 }
 
 func Walker(path string, f os.FileInfo, err error) error {
@@ -34,7 +35,7 @@ func Walker(path string, f os.FileInfo, err error) error {
             log.Fatal(err)
         }
         if isImage {
-            fmt.Printf("%s is a recognized image format!\n", path)
+            fmt.Printf(ocr.Process(path))
         }
     }
 

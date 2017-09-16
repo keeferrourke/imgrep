@@ -5,8 +5,8 @@ import (
     //"html"
     "path/filepath"
     "fmt"
-    "log"
-    "net/http"
+    //"log"
+    //"net/http"
 
     /* Third party */
     // imports as "cli", pinned to v1; cliv2 is going to be drastically
@@ -26,7 +26,7 @@ func StartServer(c *cli.Context) (err error) {
 
     err = filepath.Walk(files.WALKPATH, files.Walker)
 
-    log.Fatal(http.ListenAndServe(":" + PORT, nil))
+    //log.Fatal(http.ListenAndServe(":" + PORT, nil))
 
     return nil
 
