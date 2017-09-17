@@ -7,7 +7,6 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
-	"sync"
 
 	/* Third party */
 	// imports as "cli", pinned to v1; cliv2 is going to be drastically
@@ -46,29 +45,22 @@ func init() {
 	DBFILE = CONFDIR + string(os.PathSeparator) + "imgrep.db"
 }
 
-func Walker(wg *sync.WaitGroup) func(path string, f os.FileInfo, err error) error {
-	return func(path string, f os.FileInfo, err error) error {
-		go func() {
-			wg.Add(1)
-			defer wg.Done()
-
-			if verb {
-				fmt.Printf("touched: %s\n", path)
-			}
-
-			// only try to open existing files
-			if _, err := os.Stat(path); !os.IsNotExist(err) && !f.IsDir() {
-				isImage, err := IsImage(path)
-				if err != nil {
-					log.Fatal(err)
-				}
-				if isImage {
-					storage.Insert(path, ocr.Process(path)...)
-				}
-			}
-		}()
-		return nil
+func Walker(path string, f os.FileInfo, err error) error {
+	if verb {
+		fmt.Printf("touched: %s\n", path)
 	}
+
+	// only try to open existing files
+	if _, err := os.Stat(path); !os.IsNotExist(err) && !f.IsDir() {
+		isImage, err := IsImage(path)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if isImage {
+			storage.Insert(path, ocr.Process(path)...)
+		}
+	}
+	return nil
 }
 
 func InitFromPath(c *cli.Context) error {
@@ -76,8 +68,6 @@ func InitFromPath(c *cli.Context) error {
 		verb = true
 	}
 
-	wg := sync.WaitGroup{}
-	err := filepath.Walk(WALKPATH, Walker(&wg))
-	wg.Wait()
+	err := filepath.Walk(WALKPATH, Walker)
 	return err
 }
