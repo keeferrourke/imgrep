@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+    "runtime"
 
 	/* Third party */
 	// imports as "cli", pinned to v1; cliv2 is going to be drastically
@@ -35,13 +36,19 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	CONFDIR = u.HomeDir + string(os.PathSeparator) + ".imgrep"
-	if _, err := os.Stat(CONFDIR); os.IsNotExist(err) {
-		err = os.Mkdir(CONFDIR, os.ModePerm)
-		if err != nil {
-			panic(err)
-		}
-	}
+    CONFDIR = u.HomeDir + string(os.PathSeparator)
+    if runtime.GOOS == "windows" {
+        CONFDIR += "AppData" +string(os.PathSeparator) + "Local"
+        CONFDIR += string(os.PathSeparator) + "imgrep"
+    } else {
+        CONFDIR += ".imgrep"
+        if _, err := os.Stat(CONFDIR); os.IsNotExist(err) {
+            err = os.Mkdir(CONFDIR, os.ModePerm)
+            if err != nil {
+                panic(err)
+            }
+        }
+    }
 	DBFILE = CONFDIR + string(os.PathSeparator) + "imgrep.db"
 }
 
