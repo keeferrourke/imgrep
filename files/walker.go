@@ -29,8 +29,11 @@ var (
 
 
 func init () {
-    WALKPATH = "."
     u, err := user.Current();
+    if err != nil {
+        panic(err)
+    }
+    WALKPATH, err = os.Getwd()
     if err != nil {
         panic(err)
     }
