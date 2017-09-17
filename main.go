@@ -12,7 +12,6 @@ import (
 
 	/* Local packages */
 	"github.com/keeferrourke/imgrep/files"
-	serv "github.com/keeferrourke/imgrep/server"
 	"github.com/keeferrourke/imgrep/storage"
 )
 
@@ -51,21 +50,6 @@ var UpdateDB = cli.Command{
 	},
 }
 
-var Server = cli.Command{
-	Name:    "gui",
-	Aliases: []string{"server"},
-	Usage:   "initialize gui server",
-	Action:  serv.StartServer,
-	Flags: []cli.Flag{
-		cli.StringFlag{
-			Name:        "port, p",
-			Value:       "1337",
-			Usage:       "configure port",
-			Destination: &serv.PORT,
-		},
-	},
-}
-
 func init() {
 	storage.InitDB(files.DBFILE)
 }
@@ -98,7 +82,6 @@ func main() {
 	app.Usage = "grep image files for words"
 	app.Version = "v0"
 	app.Commands = []cli.Command{
-		Server,
 		Search,
 		UpdateDB,
 	}
