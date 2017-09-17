@@ -4,6 +4,8 @@ import (
 	/* Standard library packages */
 	"fmt"
 	"log"
+    "os"
+    "path/filepath"
 
 	/* Third party */
 	// imports as "cli", pinned to v1; cliv2 is going to be drastically
@@ -11,8 +13,11 @@ import (
 	"gopkg.in/urfave/cli.v1"
 
 	/* Local packages */
+	"github.com/keeferrourke/imgrep/ocr"
 	"github.com/keeferrourke/imgrep/storage"
 )
+
+var Args []string
 
 /* perform db query */
 func Grep(c *cli.Context) {
@@ -20,10 +25,45 @@ func Grep(c *cli.Context) {
 		log.Fatal("args: query required")
 	}
 
-	for _, arg := range c.Args() {
-		res, _ := storage.Get(arg)
-		for i := 0; i < len(res); i++ {
-			fmt.Println(res[i])
-		}
-	}
+    if c.Bool("no-preindex") {
+        for _, arg := range c.Args() {
+            Args = append(Args, arg)
+        }
+        filepath.Walk(WALKPATH, GWalker)
+    } else {
+        for _, arg := range c.Args() {
+            res, _ := storage.Get(arg)
+            for i := 0; i < len(res); i++ {
+                fmt.Println(res[i])
+            }
+        }
+    }
+}
+
+func GWalker(path string, f os.FileInfo, err error) error {
+    if verb {
+        fmt.Printf("touched: %s\n", path)
+    }
+
+    // only try to open existing files
+    if _, err := os.Stat(path); !os.IsNotExist(err) && !f.IsDir() {
+        isImage, err := IsImage(path)
+        if err != nil {
+            log.Fatal(err)
+        }
+        if isImage {
+            // rather than indexing in sqlite db, compare results from OCR
+            // scan with Args string slice
+            res := ocr.Process(path)
+            for _, r := range res {
+                for i := 0; i < len(Args); i++ {
+                    if Args[i] == r {
+                        fmt.Println(path);
+                    }
+                }
+            }
+        }
+    }
+
+    return nil
 }

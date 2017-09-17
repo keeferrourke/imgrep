@@ -27,7 +27,6 @@ var (
 )
 
 
-
 func init () {
     u, err := user.Current();
     if err != nil {

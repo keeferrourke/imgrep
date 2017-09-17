@@ -23,6 +23,12 @@ var Search = cli.Command{
 	Aliases: []string{"s", "find"},
 	Usage:   "search image database for keywords",
 	Action:  files.Grep,
+    Flags: []cli.Flag{
+        cli.BoolFlag{
+            Name: "no-preindex, n",
+            Usage: "run without preindex",
+        },
+    },
 }
 
 // update/initialize sql db
