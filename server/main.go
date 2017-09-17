@@ -12,11 +12,13 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	cli "gopkg.in/urfave/cli.v1"
 
 	/* Local packages */
 	"github.com/gorilla/mux"
+	"github.com/keeferrourke/imgrep/files"
 	"github.com/keeferrourke/imgrep/storage"
 )
 
@@ -29,25 +31,47 @@ type ResultRow struct {
 
 func StartServer(c *cli.Context) {
 	r := mux.NewRouter()
+	go files.InitFromPath(c)
 	r.HandleFunc("/imgrep/search", func(w http.ResponseWriter, r *http.Request) {
 		keyword := r.FormValue("keyword")
-		filenames, err := storage.Get(keyword)
-		if err != nil {
-			log.Fatalf(err.Error())
-		}
+		keyword = strings.TrimSpace(keyword)
+
+		keywordList := strings.Split(keyword, " ")
 
 		results := []*ResultRow{}
-		for _, file := range filenames {
-			f, err := ioutil.ReadFile(file)
+		for _, kw := range keywordList {
+			filenames, err := storage.Get(kw)
+
 			if err != nil {
 				log.Fatalf(err.Error())
 			}
 
-			results = append(results, &ResultRow{
-				Filename: file,
-				Bytes:    f,
-			})
+			for _, file := range filenames {
+				found := false
+
+				for _, rr := range results {
+					if rr.Filename == file {
+						found = true
+					}
+				}
+
+				if found {
+					continue
+				}
+
+				f, err := ioutil.ReadFile(file)
+				if err != nil {
+					log.Fatalf(err.Error())
+				}
+
+				results = append(results, &ResultRow{
+					Filename: file,
+					Bytes:    f,
+				})
+			}
+
 		}
+
 		resp := map[string][]*ResultRow{}
 		resp["files"] = results
 
