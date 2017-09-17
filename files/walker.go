@@ -28,7 +28,8 @@ func init () {
     if err != nil {
         log.Fatal(err)
     }
-    WALKPATH = u.HomeDir + string(os.PathSeparator) + "Pictures/Screenshots"
+
+    WALKPATH = "."
 }
 
 func Walker(path string, f os.FileInfo, err error) error {
