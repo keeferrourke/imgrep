@@ -4,8 +4,9 @@ import (
 	/* Standard library packages */
 	"fmt"
 	"log"
-    "os"
-    "path/filepath"
+	"os"
+	"path/filepath"
+	"sync"
 
 	/* Third party */
 	// imports as "cli", pinned to v1; cliv2 is going to be drastically
@@ -25,45 +26,54 @@ func Grep(c *cli.Context) {
 		log.Fatal("args: query required")
 	}
 
-    if c.Bool("no-preindex") {
-        for _, arg := range c.Args() {
-            Args = append(Args, arg)
-        }
-        filepath.Walk(WALKPATH, GWalker)
-    } else {
-        for _, arg := range c.Args() {
-            res, _ := storage.Get(arg)
-            for i := 0; i < len(res); i++ {
-                fmt.Println(res[i])
-            }
-        }
-    }
+	if c.Bool("no-preindex") {
+		for _, arg := range c.Args() {
+			Args = append(Args, arg)
+		}
+
+		wg := sync.WaitGroup{}
+		filepath.Walk(WALKPATH, GWrapper(&wg))
+		wg.Wait()
+	} else {
+		for _, arg := range c.Args() {
+			res, _ := storage.Get(arg)
+			for i := 0; i < len(res); i++ {
+				fmt.Println(res[i])
+			}
+		}
+	}
 }
 
-func GWalker(path string, f os.FileInfo, err error) error {
-    if verb {
-        fmt.Printf("touched: %s\n", path)
-    }
+func GWrapper(wg *sync.WaitGroup) func(path string, f os.FileInfo, err error) error {
+	return func(path string, f os.FileInfo, err error) error {
+		go func() {
+			wg.Add(1)
+			defer wg.Done()
+			if verb {
+				fmt.Printf("touched: %s\n", path)
+			}
 
-    // only try to open existing files
-    if _, err := os.Stat(path); !os.IsNotExist(err) && !f.IsDir() {
-        isImage, err := IsImage(path)
-        if err != nil {
-            log.Fatal(err)
-        }
-        if isImage {
-            // rather than indexing in sqlite db, compare results from OCR
-            // scan with Args string slice
-            res := ocr.Process(path)
-            for _, r := range res {
-                for i := 0; i < len(Args); i++ {
-                    if Args[i] == r {
-                        fmt.Println(path);
-                    }
-                }
-            }
-        }
-    }
-
-    return nil
+			// only try to open existing files
+			if _, err := os.Stat(path); !os.IsNotExist(err) && !f.IsDir() {
+				isImage, err := IsImage(path)
+				if err != nil {
+					log.Fatal(err)
+				}
+				if isImage {
+					// rather than indexing in sqlite db, compare results from OCR
+					// scan with Args string slice
+					res := ocr.Process(path)
+					for j := 0; j < len(res); j++ {
+						r := res[j]
+						for i := 0; i < len(Args); i++ {
+							if Args[i] == r {
+								fmt.Println(path)
+							}
+						}
+					}
+				}
+			}
+		}()
+		return nil
+	}
 }
