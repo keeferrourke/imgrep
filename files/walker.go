@@ -5,6 +5,7 @@ import (
     "fmt"
     "log"
     "os"
+    "os/user"
     "path/filepath"
 
     /* Third party */
@@ -19,11 +20,28 @@ import (
 
 var (
     WALKPATH string
+    CONFDIR string
+    DBFILE string
+
     verb bool = false
 )
 
+
+
 func init () {
     WALKPATH = "."
+    u, err := user.Current();
+    if err != nil {
+        panic(err)
+    }
+    CONFDIR = u.HomeDir + string(os.PathSeparator) + ".imgrep"
+    if _, err := os.Stat(CONFDIR); os.IsNotExist(err) {
+        err = os.Mkdir(CONFDIR, os.ModePerm)
+        if err != nil {
+            panic(err)
+        }
+    }
+    DBFILE = CONFDIR + string(os.PathSeparator) + "imgrep.db"
 }
 
 func Walker(path string, f os.FileInfo, err error) error {

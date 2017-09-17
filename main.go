@@ -45,7 +45,7 @@ var UpdateDB = cli.Command {
 }
 
 func init() {
-    storage.InitDB(storage.DBPATH)
+    storage.InitDB(files.DBFILE)
 }
 
 /* run application */
