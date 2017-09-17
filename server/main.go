@@ -59,7 +59,7 @@ func StartServer(c *cli.Context) {
 	})
 
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		templates, err := template.ParseFiles("./index.html")
+		templates, err := template.ParseFiles(os.Getenv("GOPATH") + "/src/github.com/keeferrourke/imgrep/index.html")
 		if err != nil {
 			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -72,7 +72,6 @@ func StartServer(c *cli.Context) {
 	})
 
 	s := http.StripPrefix("/assets/", http.FileServer(http.Dir(os.Getenv("GOPATH")+"/src/github.com/keeferrourke/imgrep/assets")))
-	log.Println(os.Getenv("GOPATH") + "/src/github.com/keeferrourke/imgrep/assets")
 	r.PathPrefix("/assets/").Handler(s)
 
 	http.ListenAndServe(":"+PORT, r)

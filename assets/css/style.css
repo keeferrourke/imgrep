@@ -60,4 +60,8 @@ h4 {
   .results{
     width: 90%;
   }
+
+  .imageContainer {
+    width: 98%;
+  }
 }
