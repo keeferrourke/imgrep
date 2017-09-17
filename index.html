@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Imgrep</title>
+    <link rel = "stylesheet" type = "text/css" href = "/assets/css/style.css" />
+  </head>
+  <body>
+    <div class="results">
+      <h1>imgrep</h1>
+      <div class="searchBox">
+        <input type="text" id="keyword" placeholder="Enter a keyword" size="85">
+      </div>
+    </div>
+    <div id="imageBigContainer" style="text-align:center">
+    <div>
+  </body>
+  <script src="/assets/js/jquery-1.12.0.min.js"></script>
+  <script>
+    document.getElementById("keyword").addEventListener("keyup", search);
+
+    function search() {
+      var keyword = document.getElementById('keyword').value;
+      var html = '';
+      if (keyword != null && keyword.length > 0) {
+        $.ajax({
+          url: '/imgrep/search',
+          type: 'GET',
+          data: {keyword:keyword},
+          success: function(data) {
+            var results = data.files
+            for (var i = 0; i < results.length; i++) {
+              html += '<div class="imageContainer">';
+              html += '<img class="image" src="data:image/png;base64,' + results[i].bytes + '">';
+              html += '<a target=_blank href="file://' + results[i].filename + '">' + results[i].filename + '</p>';
+              html += '</div>';
+            }
+            html += '<div class="clear"></div>';
+            if (keyword == document.getElementById('keyword').value) {
+              document.getElementById("imageBigContainer").innerHTML = html;
+            } else {
+              search();
+            }
+          },
+          error: function(log) {
+            console.log(log.message);
+          }
+        });
+      } else {
+        document.getElementById("imageBigContainer").innerHTML = "";
+      }
+    }
+    </script>
+</html>

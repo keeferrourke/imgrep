@@ -22,25 +22,20 @@ h4 {
   font-size:60px;
 }
 
+.clear{
+  clear: both;
+}
+
 .imageContainer {
-  height: 300px;
-  overflow: auto;
-  display:inline-block;
   padding:10px 30px;
   margin:10px;
-  max-width:600px;
+  width: 25%;
+  float: left;
 }
 
-.imageContainer img{
-  height: inherit;
-  display:block;
-}
-
-.imageContainer p{
-  display:block;
-  text-align:left;
-  width:inherit;
-  font-size:14px;
+.image{
+  width: 100%;
+  display: block;
 }
 
 #keyword {
