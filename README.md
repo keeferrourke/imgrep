@@ -1,8 +1,7 @@
 # imgrep
 
-`imgrep` is a command-line utility (and website) written in Go to search
-for keywords found within images.
-![](.product/web_no_query.png)
+`imgrep` is a command-line utility in Go to search for keywords found
+within images.
 
 ## Installation
 
@@ -56,24 +55,6 @@ Like the `grep` family of functions, `imgrep` is useful with Unix-pipes:
 #          plain-text file
 head -n1 myfile | imgrep search -n - | wc -l
 ```
-
-### Web UI
-`imgrep` comes with a familiar search-based web UI that interacts with
-the pre-indexed sqlite database. This web-UI was added to make demo-ing
-this utitility easier in a hackathon setting, and is a good POC for how
-this `imgrep` may be used.
-
-To start a server on localhost:1337:
-
-```
-imgrep server
-```
-Then just visit 'localhost:1337' in your favourite web brower ;)
-
-#### Preview
-![](.product/web_node_query.png)
-![](.product/web_me_query.png)
-
 
 ## License
 `imgrep` is free software licensed under the MIT license.
