@@ -32,7 +32,7 @@
             for (var i = 0; i < results.length; i++) {
               html += '<div class="imageContainer">';
               html += '<img class="image" src="data:image/png;base64,' + results[i].bytes + '">';
-              html += '<a target=_blank href="file://' + results[i].filename + '">' + results[i].filename + '</p>';
+              html += '<a class="imageLink" target=_blank href="file://' + results[i].filename + '">' + results[i].filename + '</p>';
               html += '</div>';
             }
             html += '<div class="clear"></div>';

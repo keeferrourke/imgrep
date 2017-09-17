@@ -14,8 +14,13 @@ body {
   width: 600px;
 }
 
+#imageBigContainer{
+  margin-top: 50px;
+  margin: 0 auto;
+}
+
 h1 {
-  font-size: 100px;
+  font-size: 50px;
 }
 
 h4 {
@@ -27,14 +32,22 @@ h4 {
 }
 
 .imageContainer {
-  padding:10px;
   width: 25%;
   float: left;
+  font-size: 16px;
+}
+
+.imageLink{
+  font-size: 0.5em;
+  display:block;
+  width: 98%;
+  margin: 0 auto;
 }
 
 .image{
-  width: 100%;
+  width: 98%;
   display: block;
+  margin: 0 auto;
 }
 
 #keyword {
@@ -50,17 +63,10 @@ h4 {
 @media only screen and (max-width: 769px){
   #keyword{
     font-size: 20px;
-  } 
-
-  h1{
-    font-size: 60px;
-  }
+  }   
 
   .results{
     width: 90%;
   }
 
-  .imageContainer {
-    width: 98%;
-  }
 }
