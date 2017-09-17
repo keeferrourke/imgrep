@@ -24,10 +24,10 @@ go install $GOPATH/src/github.com/keeferrourke/imgrep
 `imgrep` like `grep`, searches file contents for text. Unlike `grep`
 however, `imgrep` searches image files only using Tesseract OCR.
 
-`imgrep` comes with two interfaces; a cli as one might expect, and a
+`imgrep` comes with two interfaces; a CLI as one might expect, and a
 web-UI graphical front-end.
 
-### Cli
+### CLI
 To speed up the process on some machines, `imgrep` can pre-process and
 index files by keywords found within them. To preindex an entire
 directory (including subdirectories):
@@ -50,7 +50,7 @@ imgrep search -n QUERY
 Like the `grep` family of functions, `imgrep` is useful with Unix-pipes:
 ```
 # Example: Count the number of images that contain the first line of a
-plain-text file
+#          plain-text file
 head -n1 myfile | imgrep search -n - | wc -l
 ```
 
@@ -62,3 +62,11 @@ the pre-indexed sqlite database. To start a server on localhost:1337:
 imgrep server
 ```
 Then just visit 'localhost:1337' in your favourite web brower ;)
+
+
+## License
+`imgrep` is free software licensed under the MIT license.
+
+Copyright (c) 2017 Keefer Rourke, Ivan Zhang, and Thomas Dedinsky.
+
+See LICENSE for details.
