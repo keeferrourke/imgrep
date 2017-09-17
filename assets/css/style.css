@@ -27,6 +27,7 @@ h4 {
 }
 
 .imageContainer {
+  padding:10px;
   width: 25%;
   float: left;
 }
