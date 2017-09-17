@@ -7,6 +7,7 @@ import (
 	// imports as "cli", pinned to v1; cliv2 is going to be drastically
 	// different and pinning to v1 avoids issues with unstable API changes
 	"encoding/json"
+    "fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -97,6 +98,7 @@ func StartServer(c *cli.Context) {
 
 	s := http.StripPrefix("/assets/", http.FileServer(http.Dir(os.Getenv("GOPATH")+"/src/github.com/keeferrourke/imgrep/assets")))
 	r.PathPrefix("/assets/").Handler(s)
+    fmt.Println("Started server on localhost:"+PORT)
 
 	http.ListenAndServe(":"+PORT, r)
 }
