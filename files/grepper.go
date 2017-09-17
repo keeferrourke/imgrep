@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 
 	/* Third party */
@@ -63,13 +64,19 @@ func GWrapper(wg *sync.WaitGroup) func(path string, f os.FileInfo, err error) er
 					// rather than indexing in sqlite db, compare results from OCR
 					// scan with Args string slice
 					res := ocr.Process(path)
+					found := false
 					for j := 0; j < len(res); j++ {
 						r := res[j]
+
 						for i := 0; i < len(Args); i++ {
-							if Args[i] == r {
-								fmt.Println(path)
+							if strings.Contains(strings.ToLower(r), strings.ToLower(Args[i])) {
+								found = true
 							}
 						}
+					}
+
+					if found {
+						fmt.Println(path)
 					}
 				}
 			}
