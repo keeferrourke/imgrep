@@ -5,7 +5,6 @@ import (
     "fmt"
     "log"
     "os"
-    "os/user"
     "path/filepath"
 
     /* Third party */
@@ -24,11 +23,6 @@ var (
 )
 
 func init () {
-    u, err := user.Current()
-    if err != nil {
-        log.Fatal(err)
-    }
-
     WALKPATH = "."
 }
 
