@@ -9,15 +9,17 @@ for keywords found within images.
 `imgrep` depends on
 [Tesseract](https://github.com/tesseract-ocr/tesseract).
   * On Fedora: `sudo dnf install tesseract-devel`
+  * On Debian: `sudo apt-get install libtesseract-dev`
 
 To install:
 ```
 # install dependencies
-sudo dnf install tesseract-devel golang
+sudo dnf install tesseract-devel leptonica-devel golang # Fedora
+#sudo apt-get install libtesseract-dev libleptonica-dev golang # Debian
 
 # fetch src and install binary
-go get https://github.com/keeferrourke/imgrep
-go install $GOPATH/src/github.com/keeferrourke/imgrep
+go get github.com/keeferrourke/imgrep
+go install github.com/keeferrourke/imgrep
 
 ```
 
