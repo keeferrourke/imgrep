@@ -1,43 +1,39 @@
 package files
 
 import (
-    /* Standard library packages */
-    "io/ioutil"
-    "log"
-    "strings"
+	/* Standard library packages */
+	"io/ioutil"
+	"log"
+	"strings"
+	/* Third party */ /* Local packages */)
 
-    /* Third party */
-
-    /* Local packages */
-)
-
-var magicTable = map[string]string {
-    "\xff\xd8\xff":      "image/jpeg",
-    "\x89PNG\r\n\x1a\n": "image/png",
-    "GIF87a":            "image/gif",
-    "GIF89a":            "image/gif",
+var magicTable = map[string]string{
+	"\xff\xd8\xff":      "image/jpeg",
+	"\x89PNG\r\n\x1a\n": "image/png",
+	"GIF87a":            "image/gif",
+	"GIF89a":            "image/gif",
 }
 
 func magicLookup(magicb []byte) string {
-    magicstr := string(magicb)
-    for magic, mimetype := range magicTable {
-        if strings.HasPrefix(magicstr, magic) {
-            return mimetype
-        }
-    }
+	magicstr := string(magicb)
+	for magic, mimetype := range magicTable {
+		if strings.HasPrefix(magicstr, magic) {
+			return mimetype
+		}
+	}
 
-    return ""
+	return ""
 }
 
 func IsImage(path string) (bool, error) {
-    b, err := ioutil.ReadFile(path)
-    if err != nil {
-        log.Fatal(err)
-    }
+	b, err := ioutil.ReadFile(path)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-    mime := magicLookup(b)
-    if mime == "" {
-        return false, err
-    }
-    return true, err
+	mime := magicLookup(b)
+	if mime == "" {
+		return false, err
+	}
+	return true, err
 }
