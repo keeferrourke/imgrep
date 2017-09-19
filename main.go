@@ -66,13 +66,12 @@ func main() {
 	app := cli.NewApp()
 	app.Authors = []cli.Author{
 		cli.Author{
-			Name: "Keefer Rourke",
+			Name:  "Keefer Rourke",
+			Email: "mail@krourke.org",
 		},
 		cli.Author{
-			Name: "Ivan Zhang",
-		},
-		cli.Author{
-			Name: "Thomas Dedinsky",
+			Name:  "Ivan Zhang",
+			Email: "ivan@ivanzhang.ca",
 		},
 	}
 	app.Copyright = "(c) 2017 under the MIT License"

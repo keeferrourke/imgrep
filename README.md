@@ -89,6 +89,6 @@ See [`imgrep-web`](https://github.com/keeferrourke/imgrep-web).
 ## License
 `imgrep` is free software licensed under the MIT license.
 
-Copyright (c) 2017 Keefer Rourke, Ivan Zhang, and Thomas Dedinsky.
+Copyright (c) 2017 Keefer Rourke and Ivan Zhang.
 
 See LICENSE for details.
