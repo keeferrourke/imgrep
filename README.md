@@ -16,10 +16,10 @@ within images.
 
 ```
 # Fedora
-sudo dnf install tesseract-devel leptonica-devel golang
+sudo dnf install tesseract tesseract-devel leptonica-devel golang
 
 # Debian
-sudo apt-get install libtesseract-dev libleptonica-dev golang
+sudo apt-get install tesseract-ocr libtesseract-dev libleptonica-dev golang
 ```
 
 #### macOS:
