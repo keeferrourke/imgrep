@@ -2,6 +2,7 @@ package files
 
 import (
 	/* Standard library packages */
+	"errors"
 	"io/ioutil"
 	"log"
 	"strings"
@@ -14,26 +15,27 @@ var magicTable = map[string]string{
 	"GIF89a":            "image/gif",
 }
 
-func magicLookup(magicb []byte) string {
-	magicstr := string(magicb)
+func magicLookup(b []byte) (string, error) {
+	imgdata := string(b)
 	for magic, mimetype := range magicTable {
-		if strings.HasPrefix(magicstr, magic) {
-			return mimetype
+		if strings.HasPrefix(imgdata, magic) {
+			return mimetype, nil
 		}
 	}
 
-	return ""
+	return "", errors.New("file: image format unrecognized")
 }
 
 func IsImage(path string) (bool, error) {
 	b, err := ioutil.ReadFile(path)
 	if err != nil {
-		log.Fatal(err)
-	}
-
-	mime := magicLookup(b)
-	if mime == "" {
+		log.Printf("%T %v\n", err, err)
 		return false, err
 	}
-	return true, err
+
+	_, err = magicLookup(b)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
