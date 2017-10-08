@@ -3,7 +3,6 @@ package ocr
 import (
 	/* Standard library packages */
 	"errors"
-	"fmt"
 	"os"
 	"strings"
 
@@ -25,6 +24,8 @@ func Process(path string) ([]string, error) {
 		return nil, err
 	}
 
-	s := fmt.Sprintf(out)
-	return strings.Split(s, " "), nil
+	if out == "" {
+		return nil, nil
+	}
+	return strings.Split(out, " "), nil
 }

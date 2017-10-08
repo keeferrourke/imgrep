@@ -12,7 +12,7 @@ var magicTable = map[string]string{
 	"\xff\xd8\xff":      "image/jpeg",
 	"\x89PNG\r\n\x1a\n": "image/png",
 	"GIF87a":            "image/gif",
-	"GIF89a":            "image/gif",
+	//"GIF89a":            "image/gif", // animated gif
 }
 
 func magicLookup(b []byte) (string, error) {

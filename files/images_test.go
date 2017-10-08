@@ -13,10 +13,7 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	// clean up before test
-	os.Remove("test.png")
-	os.Remove("test.jpg")
-
+	/* set up tests */
 	// create image data
 	const w, h = 24, 24
 	img := image.NewNRGBA(image.Rect(0, 0, w, h))
@@ -30,7 +27,6 @@ func TestMain(m *testing.M) {
 			})
 		}
 	}
-
 	// png
 	pngTest, err := os.Create("test.png")
 	defer pngTest.Close()
@@ -40,7 +36,6 @@ func TestMain(m *testing.M) {
 	if err := png.Encode(pngTest, img); err != nil {
 		log.Fatal(err)
 	}
-
 	// jpg
 	jpgTest, err := os.Create("test.jpg")
 	defer jpgTest.Close()
@@ -53,7 +48,6 @@ func TestMain(m *testing.M) {
 	if err := jpeg.Encode(jpgTest, img, &oj); err != nil {
 		log.Fatal(err)
 	}
-
 	// gif
 	gifTest, err := os.Create("test.gif")
 	defer gifTest.Close()
@@ -67,7 +61,22 @@ func TestMain(m *testing.M) {
 		log.Fatal(err)
 	}
 
-	os.Exit(m.Run())
+	/* run tests */
+	m.Run()
+
+	/* clean up tests */
+	err = os.RemoveAll("test.png")
+	if err != nil {
+		log.Fatal("%T, %v\n", err, err)
+	}
+	err = os.RemoveAll("test.jpg")
+	if err != nil {
+		log.Fatal("%T, %v\n", err, err)
+	}
+	err = os.RemoveAll("test.gif")
+	if err != nil {
+		log.Fatal("%T, %v\n", err, err)
+	}
 }
 
 func TestIsImage(t *testing.T) {
@@ -83,11 +92,11 @@ func TestIsImage(t *testing.T) {
 	}
 	jpg, err := IsImage("test.jpg")
 	if err != nil || !jpg {
-		t.Error("Colour not verify test JPG image.")
+		t.Error("Could not verify test JPG image.")
 	}
 	gif, err := IsImage("test.gif")
 	if err != nil || !gif {
-		t.Error("Colour not verify test GIF image.")
+		t.Error("Could not verify test GIF image.")
 	}
 
 }
