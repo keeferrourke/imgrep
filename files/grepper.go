@@ -30,11 +30,13 @@ func Grep(c *cli.Context) {
 		for _, arg := range c.Args() {
 			Args = append(Args, arg)
 		}
-
 		filepath.Walk(WALKPATH, GWalker)
 	} else {
 		for _, arg := range c.Args() {
-			res, _ := storage.Get(arg)
+			res, err := storage.Get(arg)
+			if err != nil {
+				log.Printf("%T %v\n", err, err)
+			}
 			for i := 0; i < len(res); i++ {
 				fmt.Println(res[i])
 			}
@@ -56,11 +58,13 @@ func GWalker(path string, f os.FileInfo, err error) error {
 		if isImage {
 			// rather than indexing in sqlite db, compare results from OCR
 			// scan with Args string slice
-			res := ocr.Process(path)
+			res, err := ocr.Process(path)
+			if err != nil {
+				return err
+			}
 			found := false
 			for j := 0; j < len(res); j++ {
 				r := res[j]
-
 				for i := 0; i < len(Args); i++ {
 					if strings.Contains(strings.ToLower(r), strings.ToLower(Args[i])) {
 						found = true

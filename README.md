@@ -3,6 +3,8 @@
 `imgrep` is a command-line utility in Go to search for keywords found
 within images.
 
+![coverage](https://img.shields.io/badge/coverage-%3C10%25-red.svg)
+
 ## Installation
 
 `imgrep` depends on

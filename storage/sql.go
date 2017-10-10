@@ -2,6 +2,7 @@ package storage
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"log"
 	"strings"
@@ -48,6 +49,9 @@ type Result struct {
 }
 
 func Get(keyword string) ([]string, error) {
+	if keyword == "" {
+		return nil, errors.New("query: empty query matches all images")
+	}
 	results := []string{}
 	rows, err := db.Query(`select * from images`, fmt.Sprintf("%%%s%%", keyword))
 	if err != nil {
