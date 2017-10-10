@@ -53,7 +53,7 @@ func GWalker(path string, f os.FileInfo, err error) error {
 	if _, err := os.Stat(path); !os.IsNotExist(err) && !f.IsDir() {
 		err := IsImage(path)
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 
 		// rather than indexing in sqlite db, compare results from OCR
