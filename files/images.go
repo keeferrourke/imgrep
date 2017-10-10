@@ -4,7 +4,6 @@ import (
 	/* Standard library packages */
 	"errors"
 	"io/ioutil"
-	"log"
 	"strings"
 	/* Third party */ /* Local packages */)
 
@@ -15,6 +14,8 @@ var magicTable = map[string]string{
 	//"GIF89a":            "image/gif", // animated gif
 }
 
+var ErrImageNotRecognized = errors.New("file: image format unrecognized")
+
 func magicLookup(b []byte) (string, error) {
 	imgdata := string(b)
 	for magic, mimetype := range magicTable {
@@ -23,19 +24,18 @@ func magicLookup(b []byte) (string, error) {
 		}
 	}
 
-	return "", errors.New("file: image format unrecognized")
+	return "", ErrImageNotRecognized
 }
 
-func IsImage(path string) (bool, error) {
+func IsImage(path string) error {
 	b, err := ioutil.ReadFile(path)
 	if err != nil {
-		log.Printf("%T %v\n", err, err)
-		return false, err
+		return err
 	}
 
 	_, err = magicLookup(b)
 	if err != nil {
-		return false, err
+		return err
 	}
-	return true, nil
+	return nil
 }

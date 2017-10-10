@@ -93,3 +93,13 @@ func Update(filename string, keywords ...string) error {
 	_, err = stmt.Exec(keywordsAppended, filename)
 	return err
 }
+
+func Delete(filename string) error {
+	stmt, err := db.Prepare("delete from images where filename=?")
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Exec(filename)
+	return err
+}

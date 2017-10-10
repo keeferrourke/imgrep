@@ -51,30 +51,29 @@ func GWalker(path string, f os.FileInfo, err error) error {
 
 	// only try to open existing files
 	if _, err := os.Stat(path); !os.IsNotExist(err) && !f.IsDir() {
-		isImage, err := IsImage(path)
+		err := IsImage(path)
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
-		if isImage {
-			// rather than indexing in sqlite db, compare results from OCR
-			// scan with Args string slice
-			res, err := ocr.Process(path)
-			if err != nil {
-				return err
-			}
-			found := false
-			for j := 0; j < len(res); j++ {
-				r := res[j]
-				for i := 0; i < len(Args); i++ {
-					if strings.Contains(strings.ToLower(r), strings.ToLower(Args[i])) {
-						found = true
-					}
+
+		// rather than indexing in sqlite db, compare results from OCR
+		// scan with Args string slice
+		res, err := ocr.Process(path)
+		if err != nil {
+			return err
+		}
+		found := false
+		for j := 0; j < len(res); j++ {
+			r := res[j]
+			for i := 0; i < len(Args); i++ {
+				if strings.Contains(strings.ToLower(r), strings.ToLower(Args[i])) {
+					found = true
 				}
 			}
+		}
 
-			if found {
-				fmt.Println(path)
-			}
+		if found {
+			fmt.Println(path)
 		}
 	}
 	return nil
