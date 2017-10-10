@@ -82,20 +82,20 @@ func TestMain(m *testing.M) {
 func TestIsImage(t *testing.T) {
 	// test with empty path
 	fmt.Println("Expecting path error...")
-	_, err := IsImage("")
+	err := IsImage("")
 	if err == nil {
 		t.Error("Test with empty path should have thrown error.")
 	}
-	png, err := IsImage("test.png")
-	if err != nil || !png {
+	err = IsImage("test.png")
+	if err != nil {
 		t.Error("Could not verify test PNG image.")
 	}
-	jpg, err := IsImage("test.jpg")
-	if err != nil || !jpg {
+	err = IsImage("test.jpg")
+	if err != nil {
 		t.Error("Could not verify test JPG image.")
 	}
-	gif, err := IsImage("test.gif")
-	if err != nil || !gif {
+	err = IsImage("test.gif")
+	if err != nil {
 		t.Error("Could not verify test GIF image.")
 	}
 

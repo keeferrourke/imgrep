@@ -4,7 +4,6 @@ import (
 	/* Standard library packages */
 	"errors"
 	"io/ioutil"
-	"log"
 	"strings"
 	/* Third party */ /* Local packages */)
 
@@ -26,16 +25,15 @@ func magicLookup(b []byte) (string, error) {
 	return "", errors.New("file: image format unrecognized")
 }
 
-func IsImage(path string) (bool, error) {
+func IsImage(path string) error {
 	b, err := ioutil.ReadFile(path)
 	if err != nil {
-		log.Printf("%T %v\n", err, err)
-		return false, err
+		return err
 	}
 
 	_, err = magicLookup(b)
 	if err != nil {
-		return false, err
+		return err
 	}
-	return true, nil
+	return nil
 }

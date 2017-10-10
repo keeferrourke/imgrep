@@ -1,11 +1,6 @@
 # binary name
 imgrep
 
-# test files
-*.jpg
-*.png
-*.gif
-
 # sqlite
 *.db
 

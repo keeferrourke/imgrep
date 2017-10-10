@@ -52,25 +52,31 @@ func init() {
 	DBFILE = CONFDIR + string(os.PathSeparator) + "imgrep.db"
 }
 
+func processImage(path string) error {
+	log.Println(path)
+	err := IsImage(path)
+	if err != nil {
+		return err
+	}
+
+	keys, err := ocr.Process(path)
+	if err != nil {
+		return err
+	}
+
+	err = storage.Insert(path, keys...)
+	return err
+}
+
 func Walker(path string, f os.FileInfo, err error) error {
 	if verb {
 		fmt.Printf("touched: %s\n", path)
 	}
 
 	// only try to open existing files
-	if _, err := os.Stat(path); !os.IsNotExist(err) && !f.IsDir() {
-		isImage, _ := IsImage(path) // this error ain't nothin'!
-		if err != nil {
-			log.Printf("%T, %v", err, err)
-		}
-		if isImage { // only process images
-			var keys []string
-			keys, err := ocr.Process(path)
-			if err != nil {
-				return err
-			}
-			storage.Insert(path, keys...)
-		}
+	if _, err := os.Stat(path); !os.IsNotExist(err) && !f.IsDir() && err != nil {
+		err := processImage(path)
+		return err
 	}
 	return nil
 }
