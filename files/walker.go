@@ -3,7 +3,6 @@ package files
 import (
 	/* Standard library packages */
 	"fmt"
-	"log"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -53,7 +52,6 @@ func init() {
 }
 
 func processImage(path string) error {
-	log.Println(path)
 	err := IsImage(path)
 	if err != nil {
 		return err

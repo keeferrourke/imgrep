@@ -14,6 +14,8 @@ var magicTable = map[string]string{
 	//"GIF89a":            "image/gif", // animated gif
 }
 
+var ErrImageNotRecognized = errors.New("file: image format unrecognized")
+
 func magicLookup(b []byte) (string, error) {
 	imgdata := string(b)
 	for magic, mimetype := range magicTable {
@@ -22,7 +24,7 @@ func magicLookup(b []byte) (string, error) {
 		}
 	}
 
-	return "", errors.New("file: image format unrecognized")
+	return "", ErrImageNotRecognized
 }
 
 func IsImage(path string) error {
