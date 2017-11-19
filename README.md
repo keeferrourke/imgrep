@@ -3,7 +3,7 @@
 `imgrep` is a command-line utility in Go to search for keywords found
 within images.
 
-![coverage](https://img.shields.io/badge/coverage-%3C10%25-red.svg)
+![coverage](https://img.shields.io/badge/coverage-70%25-green.svg)
 
 ## Installation
 
@@ -44,16 +44,18 @@ go install github.com/keeferrourke/imgrep
 
 ## Usage
 
-`imgrep` like `grep`, searches file contents for text. Unlike `grep`
-however, `imgrep` searches image files only using Tesseract OCR.
+`imgrep` like `grep`, searches file contents for text. `imgrep` works
+exclusively on images however, using text extracted using OCR as the
+search haystack.
 
 `imgrep` comes with two interfaces; a CLI as one might expect, and a
 web-UI graphical front-end.
 
 ### CLI
 
-To speed up the process on some machines, `imgrep` can pre-process and
-index files by keywords found within them. To preindex an entire
+Because OCR is expensive to the CPU, `imgrep` can pre-process and
+index files by keywords stored to a database. This database is queried
+unless specified otherwise. To preindex an entire
 directory (including subdirectories):
 
 ```
@@ -61,17 +63,23 @@ imgrep init # pre-process and index image files in working directory
 ```
 
 By default, `imgrep` uses this database of pre-indexed files to perform
-simple queries. To check preindexed directories:
+simple queries. Because of the nature of OCR, picked up keywords may not
+be accurate, so a sort of "fuzzy-search" is employed here. To mimic the
+original usage of `grep`, `imgrep` queries are case-sensitive. The `-i`
+option is provided to ignore case specifiers of query strings &mdash;
+it is nearly always recommended to run your queries with this option.
+
+To check preindexed directories:
 
 ```
-imgrep search QUERY
+imgrep search -i QUERY
 ```
 
 To use `imgrep` without checking against the database of preindexed
 files, simply call
 
 ```
-imgrep search -n QUERY
+imgrep search -ni QUERY
 ```
 
 Like the `grep` family of functions, `imgrep` is useful with Unix-pipes:
@@ -79,7 +87,7 @@ Like the `grep` family of functions, `imgrep` is useful with Unix-pipes:
 ```
 # Example: Count the number of images that contain the first line of a
 #          plain-text file
-head -n1 myfile | imgrep search -n - | wc -l
+head -n1 myfile | imgrep search -n -i - | wc -l
 
 # Example: Open the first file that matches a search
 xdg-open "$(imgrep s learn | head -n1)"

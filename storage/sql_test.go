@@ -19,37 +19,47 @@ func TestGet(t *testing.T) {
 	}
 
 	filename := "foo.jpeg"
-	keywords := "yolo,yolobolo"
+	keywords := "foo,bar"
 
 	_, err = stmt.Exec(filename, keywords)
 	if err != nil {
 		t.Fatalf("error: %v", err)
 	}
 
-	results, err := Get("yolo")
+	results, err := Get("Foo", true) // ignore case specifiers
 	if err != nil {
 		t.Fatalf("error: %v", err)
 	}
-
 	if len(results) == 0 {
 		t.Fatalf("no results were found")
 	}
-
 	if results[0] != filename {
-		t.Error("f.jpeg was not found")
+		t.Errorf("%s was not found", filename)
+	}
+
+	results, err = Get("foo", false) // respect case specifiers
+	if err != nil {
+		t.Fatalf("error %v", err)
+	}
+	if len(results) == 0 {
+		t.Fatalf("no results were found")
+	}
+	if results[0] != filename {
+		t.Errorf("%s was not found", filename)
 	}
 }
 
 func TestInsert(t *testing.T) {
-	filename := "foo2.jpeg"
-	keyword1 := "yolo"
-	keyword2 := "yolobolo"
+	filename := "bar.jpeg"
+	keyword1 := "bar"
+	keyword2 := "foobar"
 
 	err := Insert(filename, keyword1, keyword2)
 	if err != nil {
 		t.Fatalf("error: %v", err)
 	}
 
+	// perform get to verify insert
 	rows, err := db.Query(`select * from images where keywords like ?`, fmt.Sprintf("%%%s%%", keyword1))
 	if err != nil {
 		t.Fatalf("error: %v", err)
@@ -82,15 +92,16 @@ func TestUpdate(t *testing.T) {
 		t.Fatalf("error: %v", err)
 	}
 
-	filename := "foo3.jpeg"
-	keywords := "yolo"
+	filename := "widget.jpeg"
+	keywords := "widget"
+	newkw := "bangbang"
 
 	_, err = stmt.Exec(filename, keywords)
 	if err != nil {
 		t.Fatalf("error: %v", err)
 	}
 
-	err = Update(filename, "yolo2")
+	err = Update(filename, newkw)
 	if err != nil {
 		t.Fatalf("error: %v", err)
 	}
@@ -116,7 +127,7 @@ func TestUpdate(t *testing.T) {
 		t.Errorf("Incorrect filename: %v", fname)
 	}
 
-	if kws != "yolo2" {
+	if kws != newkw {
 		t.Errorf("Incorrect keyword: %v", kws)
 	}
 

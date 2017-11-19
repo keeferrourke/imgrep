@@ -15,11 +15,9 @@ func Process(path string) ([]string, error) {
 		return nil, errors.New("path: cannot stat file")
 	}
 
-	client, err := gosseract.NewClient()
-	if err != nil {
-		return nil, err
-	}
-	out, err := client.Src(path).Out()
+	client := gosseract.NewClient()
+	client.SetImage(path)
+	out, err := client.Text()
 	if err != nil {
 		return nil, err
 	}

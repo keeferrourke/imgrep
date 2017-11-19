@@ -48,7 +48,7 @@ type Result struct {
 	Keywords []string `json:"keywords"`
 }
 
-func Get(keyword string) ([]string, error) {
+func Get(keyword string, ignoreCase bool) ([]string, error) {
 	if keyword == "" {
 		return nil, errors.New("query: empty query matches all images")
 	}
@@ -71,8 +71,14 @@ func Get(keyword string) ([]string, error) {
 
 		found := false
 		for _, kw := range strings.Split(keywords, ",") {
-			if strings.Contains(strings.ToLower(kw), strings.ToLower(keyword)) {
-				found = true
+			if ignoreCase {
+				if strings.Contains(strings.ToLower(kw), strings.ToLower(keyword)) {
+					found = true
+				}
+			} else {
+				if strings.Contains(kw, keyword) {
+					found = true
+				}
 			}
 		}
 

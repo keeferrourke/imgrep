@@ -3,6 +3,7 @@ package main
 import (
 	/* Standard library packages */
 	"fmt"
+	"log"
 	"os"
 
 	/* Third party */
@@ -19,14 +20,31 @@ import (
 // search db
 var Search = cli.Command{
 	Name:    "search",
-	Aliases: []string{"s", "find"},
+	Aliases: []string{"s"},
 	Usage:   "search image database for keywords",
-	Action:  files.Grep,
 	Flags: []cli.Flag{
 		cli.BoolFlag{
 			Name:  "no-preindex, n",
 			Usage: "run without preindex",
 		},
+		cli.BoolFlag{
+			Name:  "ignore-case, i",
+			Usage: "ignore case distinctions",
+		},
+	},
+	Action: func(c *cli.Context) {
+		if len(c.Args()) < 1 {
+			log.Fatal("args: query required")
+		} else {
+			for _, arg := range c.Args() {
+				files.Query = append(files.Query, arg)
+			}
+		}
+		files.IgnoreCase = c.Bool("ignore-case")
+		files.Grep(!c.Bool("no-preindex"))
+		for r := range files.Results {
+			fmt.Println(files.Results[r])
+		}
 	},
 }
 
@@ -35,7 +53,9 @@ var UpdateDB = cli.Command{
 	Name:    "updatedb",
 	Aliases: []string{"init"},
 	Usage:   "initialize the database of images",
-	Action:  files.InitFromPath,
+	Action: func(c *cli.Context) {
+		files.InitFromPath(c.Bool("verbose"))
+	},
 	Flags: []cli.Flag{
 		cli.StringFlag{
 			Name:        "dir, d",
@@ -58,7 +78,7 @@ func init() {
 func main() {
 	// customize cli
 	cli.VersionPrinter = func(c *cli.Context) {
-		fmt.Fprintf(c.App.Writer, "%s %s - %s\n",
+		fmt.Fprintf(c.App.Writer, "%s v%s\n    %s\n",
 			c.App.Name, c.App.Version, c.App.Description)
 	}
 
@@ -77,9 +97,9 @@ func main() {
 	app.Copyright = "(c) 2017 under the MIT License"
 	app.EnableBashCompletion = true
 	app.Name = "imgrep"
-	app.Description = "go-cli image grepper using tesseract"
-	app.Usage = "grep image files for words"
-	app.Version = "v0"
+	app.Description = "image grepper using tesseract OCR to extract words from images"
+	app.Usage = "grep images for OCR extracted words"
+	app.Version = "0.0.1"
 	app.Commands = []cli.Command{
 		Search,
 		UpdateDB,

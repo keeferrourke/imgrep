@@ -12,7 +12,6 @@ import (
 	/* Third party */
 	// imports as "cli", pinned to v1; cliv2 is going to be drastically
 	// different and pinning to v1 avoids issues with unstable API changes
-	"gopkg.in/urfave/cli.v1"
 
 	/* Local packages */
 	"github.com/keeferrourke/imgrep/ocr"
@@ -24,7 +23,7 @@ var (
 	CONFDIR  string
 	DBFILE   string
 
-	verb bool = false
+	Verbose bool = false
 )
 
 func init() {
@@ -53,7 +52,7 @@ func init() {
 }
 
 func Walker(path string, f os.FileInfo, err error) error {
-	if verb {
+	if Verbose {
 		fmt.Printf("touched: %s\n", path)
 	}
 
@@ -75,9 +74,9 @@ func Walker(path string, f os.FileInfo, err error) error {
 	return nil
 }
 
-func InitFromPath(c *cli.Context) error {
-	if c.Bool("verbose") {
-		verb = true
+func InitFromPath(verbose bool) error {
+	if verbose {
+		Verbose = true
 	}
 
 	err := filepath.Walk(WALKPATH, Walker)

@@ -11,41 +11,41 @@ import (
 	/* Third party */
 	// imports as "cli", pinned to v1; cliv2 is going to be drastically
 	// different and pinning to v1 avoids issues with unstable API changes
-	"gopkg.in/urfave/cli.v1"
 
 	/* Local packages */
 	"github.com/keeferrourke/imgrep/ocr"
 	"github.com/keeferrourke/imgrep/storage"
 )
 
-var Args []string
+var (
+	Query      []string
+	Results    []string
+	IgnoreCase bool = false
+)
 
 /* perform db query */
-func Grep(c *cli.Context) {
-	if len(c.Args()) < 1 {
-		log.Fatal("args: query required")
-	}
-
-	if c.Bool("no-preindex") {
-		for _, arg := range c.Args() {
-			Args = append(Args, arg)
-		}
+func Grep(preindex bool) {
+	if !preindex {
 		filepath.Walk(WALKPATH, GWalker)
 	} else {
-		for _, arg := range c.Args() {
-			res, err := storage.Get(arg)
+		for _, arg := range Query {
+			res, err := storage.Get(arg, IgnoreCase)
 			if err != nil {
 				log.Printf("%T %v\n", err, err)
 			}
 			for i := 0; i < len(res); i++ {
-				fmt.Println(res[i])
+				Results = append(Results, res[i])
 			}
 		}
 	}
 }
 
+/* this is an alternative to the Walker function in walker.go:
+ * it both walks the filesystem and performs the search;
+ * this is slow, but was implemented on request to run imgrep without using the
+ * preindexed database */
 func GWalker(path string, f os.FileInfo, err error) error {
-	if verb {
+	if Verbose {
 		fmt.Printf("touched: %s\n", path)
 	}
 
@@ -56,24 +56,28 @@ func GWalker(path string, f os.FileInfo, err error) error {
 			log.Fatal(err)
 		}
 		if isImage {
-			// rather than indexing in sqlite db, compare results from OCR
-			// scan with Args string slice
 			res, err := ocr.Process(path)
 			if err != nil {
 				return err
 			}
 			found := false
+			// compare result words to each query word
 			for j := 0; j < len(res); j++ {
 				r := res[j]
-				for i := 0; i < len(Args); i++ {
-					if strings.Contains(strings.ToLower(r), strings.ToLower(Args[i])) {
-						found = true
+				for i := 0; i < len(Query); i++ {
+					if IgnoreCase {
+						if strings.Contains(strings.ToLower(r), strings.ToLower(Query[i])) {
+							found = true
+						}
+					} else {
+						if strings.Contains(r, Query[i]) {
+							found = true
+						}
 					}
 				}
 			}
-
 			if found {
-				fmt.Println(path)
+				Results = append(Results, path)
 			}
 		}
 	}
