@@ -38,7 +38,7 @@ Make sure your `$GOPATH` is set, then run:
 
 ```
 # fetch src and install binary
-go get github.com/keeferrourke/imgrep
+go get -u github.com/keeferrourke/imgrep
 go install github.com/keeferrourke/imgrep
 ```
 
@@ -79,7 +79,7 @@ To use `imgrep` without checking against the database of preindexed
 files, simply call
 
 ```
-imgrep search -ni QUERY
+imgrep search -n -i QUERY
 ```
 
 Like the `grep` family of functions, `imgrep` is useful with Unix-pipes:
