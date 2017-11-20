@@ -8,10 +8,6 @@ import (
 	"path/filepath"
 	"runtime"
 
-	/* Third party */
-	// imports as "cli", pinned to v1; cliv2 is going to be drastically
-	// different and pinning to v1 avoids issues with unstable API changes
-
 	/* Local packages */
 	"github.com/keeferrourke/imgrep/ocr"
 	"github.com/keeferrourke/imgrep/storage"

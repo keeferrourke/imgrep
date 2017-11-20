@@ -40,8 +40,8 @@ func Grep(preindex bool) {
 			for _, r := range res {
 				if _, err := os.Stat(r); !os.IsNotExist(err) {
 					Results = append(Results, r)
-				} else if storage.Lookup(r) {
-					storage.Remove(r)
+				} else if storage.Lookup(r) { // if file !exists and in database
+					storage.Delete(r)
 				}
 			}
 		}

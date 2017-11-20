@@ -118,7 +118,7 @@ func TestInsert(t *testing.T) {
 	}
 }
 
-func TestRemove(t *testing.T) {
+func TestDelete(t *testing.T) {
 	// remove filename that exists in database
 	stmt, err := db.Prepare("insert into images (filename, keywords) values (?, ?)")
 	if err != nil {
@@ -133,13 +133,13 @@ func TestRemove(t *testing.T) {
 		t.Fatalf("error: %v", err)
 	}
 
-	err = Remove(filename)
+	err = Delete(filename)
 	if err != nil {
 		t.Fatalf("error: %v", err)
 	}
 
 	// remove filename that is not in database
-	err = Remove(filename)
+	err = Delete(filename)
 	if err != nil {
 		t.Fatalf("error: %v", err)
 	}

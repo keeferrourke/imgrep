@@ -48,9 +48,9 @@ func Insert(filename string, keywords ...string) error {
 	return err
 }
 
-// Remove removes a row containing the specified filename
-func Remove(filename string) error {
-	stmt, err := db.Prepare("delete from images where filename = ?")
+// Delete removes a row containing the specified filename
+func Delete(filename string) error {
+	stmt, err := db.Prepare("delete from images where filename=?")
 	if err != nil {
 		return err
 	}
