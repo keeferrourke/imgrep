@@ -18,12 +18,16 @@ import (
 )
 
 var (
-	Query      []string
-	Results    []string
-	IgnoreCase bool = false
+	// Query is a slice of keywords used in a database query
+	Query []string
+	// Results is a slice of filenames of images that match the query
+	Results []string
+	// IgnoreCase is a boolean flag to ignore case specifiers in keyword strings
+	IgnoreCase = false
 )
 
-/* perform db query */
+// Grep performs the actual search by matching keywords in the database or by
+// walking the filesystem (no-preindex) and checking each file
 func Grep(preindex bool) {
 	if !preindex {
 		filepath.Walk(WALKPATH, GWalker)
@@ -33,17 +37,21 @@ func Grep(preindex bool) {
 			if err != nil {
 				log.Printf("%T %v\n", err, err)
 			}
-			for i := 0; i < len(res); i++ {
-				Results = append(Results, res[i])
+			for _, r := range res {
+				if _, err := os.Stat(r); !os.IsNotExist(err) {
+					Results = append(Results, r)
+				} else if storage.Lookup(r) {
+					storage.Remove(r)
+				}
 			}
 		}
 	}
 }
 
-/* this is an alternative to the Walker function in walker.go:
- * it both walks the filesystem and performs the search;
- * this is slow, but was implemented on request to run imgrep without using the
- * preindexed database */
+// GWalker is an alternative to the Walker function in walker.go:
+// it both walks the filesystem and performs the search;
+// this is slow, but was implemented on request to run imgrep without using the
+// preindexed database
 func GWalker(path string, f os.FileInfo, err error) error {
 	if Verbose {
 		fmt.Printf("touched: %s\n", path)
@@ -51,10 +59,7 @@ func GWalker(path string, f os.FileInfo, err error) error {
 
 	// only try to open existing files
 	if _, err := os.Stat(path); !os.IsNotExist(err) && !f.IsDir() {
-		isImage, err := IsImage(path)
-		if err != nil {
-			log.Fatal(err)
-		}
+		isImage := IsImage(path)
 		if isImage {
 			res, err := ocr.Process(path)
 			if err != nil {
@@ -62,15 +67,14 @@ func GWalker(path string, f os.FileInfo, err error) error {
 			}
 			found := false
 			// compare result words to each query word
-			for j := 0; j < len(res); j++ {
-				r := res[j]
-				for i := 0; i < len(Query); i++ {
+			for _, r := range res {
+				for _, q := range Query {
 					if IgnoreCase {
-						if strings.Contains(strings.ToLower(r), strings.ToLower(Query[i])) {
+						if strings.Contains(strings.ToLower(r), strings.ToLower(q)) {
 							found = true
 						}
 					} else {
-						if strings.Contains(r, Query[i]) {
+						if strings.Contains(r, q) {
 							found = true
 						}
 					}

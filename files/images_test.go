@@ -67,15 +67,15 @@ func TestMain(m *testing.M) {
 	/* clean up tests */
 	err = os.RemoveAll("test.png")
 	if err != nil {
-		log.Fatal("%T, %v\n", err, err)
+		log.Fatal(err)
 	}
 	err = os.RemoveAll("test.jpg")
 	if err != nil {
-		log.Fatal("%T, %v\n", err, err)
+		log.Fatal(err)
 	}
 	err = os.RemoveAll("test.gif")
 	if err != nil {
-		log.Fatal("%T, %v\n", err, err)
+		log.Fatal(err)
 	}
 }
 

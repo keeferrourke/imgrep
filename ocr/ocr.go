@@ -8,8 +8,9 @@ import (
 
 	/* Third party */
 	"github.com/otiai10/gosseract"
-	/* Local packages */)
+)
 
+// Process attempts to run OCR on the file located at the provided path
 func Process(path string) ([]string, error) {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return nil, errors.New("path: cannot stat file")

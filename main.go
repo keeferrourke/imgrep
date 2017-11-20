@@ -16,9 +16,7 @@ import (
 	"github.com/keeferrourke/imgrep/storage"
 )
 
-/* cli commands */
-// search db
-var Search = cli.Command{
+var search = cli.Command{
 	Name:    "search",
 	Aliases: []string{"s"},
 	Usage:   "search image database for keywords",
@@ -48,8 +46,7 @@ var Search = cli.Command{
 	},
 }
 
-// update/initialize sql db
-var UpdateDB = cli.Command{
+var updateDB = cli.Command{
 	Name:    "updatedb",
 	Aliases: []string{"init"},
 	Usage:   "initialize the database of images",
@@ -71,7 +68,10 @@ var UpdateDB = cli.Command{
 }
 
 func init() {
-	storage.InitDB(files.DBFILE)
+	err := storage.InitDB(files.DBFILE)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 /* run application */
@@ -101,8 +101,8 @@ func main() {
 	app.Usage = "grep images for OCR extracted words"
 	app.Version = "0.0.1"
 	app.Commands = []cli.Command{
-		Search,
-		UpdateDB,
+		search,
+		updateDB,
 	}
 	app.CommandNotFound = func(c *cli.Context, command string) {
 		fmt.Fprintf(c.App.Writer, "Did you read the manual?\n")

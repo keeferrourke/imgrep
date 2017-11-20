@@ -3,7 +3,6 @@ package files
 import (
 	/* Standard library packages */
 	"fmt"
-	"log"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -19,11 +18,15 @@ import (
 )
 
 var (
+	// WALKPATH is the path to be walked during database initialization
 	WALKPATH string
-	CONFDIR  string
-	DBFILE   string
+	// CONFDIR is the directory where program files will be stored
+	CONFDIR string
+	// DBFILE is the path to the file where the keyword database is stored
+	DBFILE string
 
-	Verbose bool = false
+	// Verbose is a boolean flag toggling verbosity of *Walker functions
+	Verbose = false
 )
 
 func init() {
@@ -51,6 +54,9 @@ func init() {
 	DBFILE = CONFDIR + string(os.PathSeparator) + "imgrep.db"
 }
 
+// Walker is executed when walking the file system.
+// It checks if files are images and runs Tesseract OCR to index keywords
+// accordingly.
 func Walker(path string, f os.FileInfo, err error) error {
 	if Verbose {
 		fmt.Printf("touched: %s\n", path)
@@ -58,10 +64,7 @@ func Walker(path string, f os.FileInfo, err error) error {
 
 	// only try to open existing files
 	if _, err := os.Stat(path); !os.IsNotExist(err) && !f.IsDir() {
-		isImage, _ := IsImage(path) // this error ain't nothin'!
-		if err != nil {
-			log.Printf("%T, %v", err, err)
-		}
+		isImage := IsImage(path)
 		if isImage { // only process images
 			var keys []string
 			keys, err := ocr.Process(path)
@@ -74,6 +77,8 @@ func Walker(path string, f os.FileInfo, err error) error {
 	return nil
 }
 
+// InitFromPath initializes the keyword database by walking the directory tree
+// and subsequently processing images.
 func InitFromPath(verbose bool) error {
 	if verbose {
 		Verbose = true

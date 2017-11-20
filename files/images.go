@@ -1,12 +1,11 @@
 package files
 
 import (
-	/* Standard library packages */
 	"errors"
 	"io/ioutil"
 	"log"
 	"strings"
-	/* Third party */ /* Local packages */)
+)
 
 var magicTable = map[string]string{
 	"\xff\xd8\xff":      "image/jpeg",
@@ -26,16 +25,18 @@ func magicLookup(b []byte) (string, error) {
 	return "", errors.New("file: image format unrecognized")
 }
 
-func IsImage(path string) (bool, error) {
+// IsImage determines if a file located at the provided path is one of a
+// JPEG, PNG, or GIF image
+func IsImage(path string) bool {
 	b, err := ioutil.ReadFile(path)
 	if err != nil {
 		log.Printf("%T %v\n", err, err)
-		return false, err
+		return false
 	}
 
 	_, err = magicLookup(b)
 	if err != nil {
-		return false, err
+		return false
 	}
-	return true, nil
+	return true
 }

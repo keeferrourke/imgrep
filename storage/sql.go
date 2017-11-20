@@ -7,12 +7,15 @@ import (
 	"log"
 	"strings"
 
+	// go-sqlite3 functions are used everywhere in this file, so a blank import
+	// is appropriate
 	_ "github.com/mattn/go-sqlite3"
 )
 
 var db *sql.DB
 
-func InitDB(path string) {
+// InitDB initializes an sqlite3 database for imgrep at the specified path
+func InitDB(path string) error {
 	var err error
 	db, err = sql.Open("sqlite3", path)
 	if err != nil {
@@ -28,10 +31,12 @@ func InitDB(path string) {
 	_, err = db.Exec(sqlStmt)
 	if err != nil {
 		log.Printf("%q: %s\n", err, sqlStmt)
-		return
+		return err
 	}
+	return nil
 }
 
+// Insert inserts a filename-keyword mapping as a row in the database
 func Insert(filename string, keywords ...string) error {
 	keywordsAppended := strings.Join(keywords, ",")
 	stmt, err := db.Prepare("insert into images (filename, keywords) values (?, ?)")
@@ -43,11 +48,31 @@ func Insert(filename string, keywords ...string) error {
 	return err
 }
 
-type Result struct {
-	Filename string   `json:"filename"`
-	Keywords []string `json:"keywords"`
+// Remove removes a row containing the specified filename
+func Remove(filename string) error {
+	stmt, err := db.Prepare("delete from images where filename = ?")
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Exec(filename)
+	return err
 }
 
+// Lookup verifies that a filename is in the database
+func Lookup(filename string) bool {
+	if filename == "" {
+		return false
+	}
+	var fn, kw string
+	err := db.QueryRow("select * from images where filename = ?", filename).Scan(&fn, &kw)
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+// Get retrieves names of image files which match the keyword
 func Get(keyword string, ignoreCase bool) ([]string, error) {
 	if keyword == "" {
 		return nil, errors.New("query: empty query matches all images")
@@ -89,6 +114,7 @@ func Get(keyword string, ignoreCase bool) ([]string, error) {
 	return results, nil
 }
 
+// Update updates a database entry
 func Update(filename string, keywords ...string) error {
 	keywordsAppended := strings.Join(keywords, ",")
 	stmt, err := db.Prepare("update images set keywords=? where filename=?")

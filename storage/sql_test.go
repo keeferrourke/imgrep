@@ -12,6 +12,13 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
+func TestInitDB(t *testing.T) {
+	err := InitDB("imgrep-test.db")
+	if err != nil {
+		t.Errorf("error: %v", err)
+	}
+}
+
 func TestGet(t *testing.T) {
 	stmt, err := db.Prepare("insert into images (filename, keywords) values (?, ?)")
 	if err != nil {
@@ -49,6 +56,31 @@ func TestGet(t *testing.T) {
 	}
 }
 
+func TestLookup(t *testing.T) {
+	// insert foo.jpeg
+	stmt, err := db.Prepare("insert into images (filename, keywords) values (?, ?)")
+	if err != nil {
+		t.Fatalf("error: %v", err)
+	}
+
+	filename := "lookup.jpeg"
+	keywords := "foo"
+	_, err = stmt.Exec(filename, keywords)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !Lookup(filename) {
+		t.Errorf("expected to find %s", filename)
+	}
+	if Lookup("definitelydoesntexit") {
+		t.Error("found unexpected entry")
+	}
+	if Lookup("") {
+		t.Error("found empty filename")
+	}
+}
+
 func TestInsert(t *testing.T) {
 	filename := "bar.jpeg"
 	keyword1 := "bar"
@@ -83,6 +115,33 @@ func TestInsert(t *testing.T) {
 
 	if keywords != fmt.Sprintf("%s,%s", keyword1, keyword2) {
 		t.Errorf("Incorrect keyword: %v", keywords)
+	}
+}
+
+func TestRemove(t *testing.T) {
+	// remove filename that exists in database
+	stmt, err := db.Prepare("insert into images (filename, keywords) values (?, ?)")
+	if err != nil {
+		t.Fatalf("error: %v", err)
+	}
+
+	filename := "deletefoo.jpeg"
+	keywords := "to,be,removed"
+
+	_, err = stmt.Exec(filename, keywords)
+	if err != nil {
+		t.Fatalf("error: %v", err)
+	}
+
+	err = Remove(filename)
+	if err != nil {
+		t.Fatalf("error: %v", err)
+	}
+
+	// remove filename that is not in database
+	err = Remove(filename)
+	if err != nil {
+		t.Fatalf("error: %v", err)
 	}
 }
 
