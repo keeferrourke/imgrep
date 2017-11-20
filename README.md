@@ -4,7 +4,7 @@
 within images.
 
 ![coverage](https://img.shields.io/badge/coverage-67%25-orange.svg)
-![goreport](https://goreportcard.com/badge/github.com/keeferrourke/imgrep)
+[![goreport](https://goreportcard.com/badge/github.com/keeferrourke/imgrep)](https://goreportcard.com/report/github.com/keeferrourke/imgrep)
 
 ## Installation
 
