@@ -4,11 +4,13 @@
 within images.
 
 ![coverage](https://img.shields.io/badge/coverage-67%25-orange.svg)
+![goreport](https://goreportcard.com/badge/github.com/keeferrourke/imgrep)
 
 ## Installation
 
 `imgrep` depends on
 [Tesseract](https://github.com/tesseract-ocr/tesseract).
+
   * On Fedora: `sudo dnf install tesseract-devel`
   * On Debian: `sudo apt-get install libtesseract-dev`
   * On macOS: `brew install tesseract`
